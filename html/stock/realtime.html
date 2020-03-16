@@ -150,12 +150,14 @@
                         lineInfo =  data.body.lineNode;
                         date = data.body.date;
                         var lineArr = [];
+                        var xArr = [];
                         for(i = 0,len = lineInfo.length; i < len; i++) {
                             lineNode = lineInfo[i];
                             lineNodeArr = [];
                             lineNodeArr.push(lineNode.time);
                             lineNodeArr.push(lineNode.price);
                             lineArr.push(lineNodeArr);
+                            xArr.push(lineNode.time);
                         }
                         var chart = Highcharts.chart('realtimeLine', {
                                 chart: {
@@ -169,8 +171,7 @@
                                     '鼠标拖动可以进行缩放' : '手势操作进行缩放'
                                 },
                                 xAxis: {
-                                    type: 'area',
-                                    data: lineArr
+                                    categories: xArr
                                 },
                                 tooltip: {
                                     dateTimeLabelFormats: {
