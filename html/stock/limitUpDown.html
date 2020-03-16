@@ -79,7 +79,7 @@
                         "type": getType(),
                     },
                     success: function(data) {
-                        totalCount =  parseInt(data.body);
+                        totalCount =  parseInt(data.data);
                         totalPage = parseInt(totalCount / pageSize) + 1;
                         document.getElementById("pageChoose").innerHTML = "";
                         $(GetPageChooseHtml(pageNum, totalPage, "handleLimitUpDownList")).appendTo(document.getElementById("pageChoose"));
@@ -101,7 +101,7 @@
                         "type": getType(),
                     },
                     success: function(data) {
-                        limitUpDownListInfo =  data.body;
+                        limitUpDownListInfo =  data.data;
                         var trStr = "";
                         var color = 1 == getType() ? "red" : (2 == getType() ? "green" : "black");
                         for(i = 0,len = limitUpDownListInfo.length; i < len; i++) {

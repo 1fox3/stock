@@ -66,7 +66,7 @@
                         "stockId": stockId,
                     },
                     success: function(data) {
-                        realtimeInfo =  data.body;
+                        realtimeInfo =  data.data;
                         var i = 0;
                         var trStr = '';
                         for (var dataKey in RealtimeKeyConfig) {
@@ -111,7 +111,7 @@
                         "stockId": stockId,
                     },
                     success: function(data) {
-                        priceListInfo =  data.body;
+                        priceListInfo =  data.data;
                         sellPriceList = priceListInfo.sell;
                         sellPriceStr = "";
                         for(i = 0,len = sellPriceList.length; i < len; i++) {
@@ -147,8 +147,8 @@
                         "stockId": stockId,
                     },
                     success: function(data) {
-                        lineInfo =  data.body.lineNode;
-                        date = data.body.date;
+                        lineInfo =  data.data.lineNode;
+                        date = data.data.date;
                         var lineArr = [];
                         var xArr = [];
                         for(i = 0,len = lineInfo.length; i < len; i++) {
