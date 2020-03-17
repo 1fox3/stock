@@ -109,7 +109,7 @@
                             lineNodeArr.push(lineNode.highestPrice);
                             lineNodeArr.push(lineNode.dealNum);
                             rawData.push(lineNodeArr);
-                            if (i + highLightNum < len) {
+                            if (i + highLightNum < len || 0 == i) {
                                 highLightStartDate = lineNode.dateTime;
                             }
                             if (i + highLightNum + 10 < len) {
