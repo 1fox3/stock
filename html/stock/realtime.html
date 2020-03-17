@@ -55,6 +55,7 @@
         <script src="https://code.highcharts.com.cn/jquery/jquery-1.8.3.min.js"></script>
         <script src="https://code.highcharts.com.cn/highcharts/highcharts.js"></script>
         <script type="text/javascript">
+            var yesterdayClosePrice = 0;
             function handleRealtimeInfo() {
                 var urlParams = GetUrlParams();
                 var stockId = urlParams.stockId;
@@ -79,6 +80,9 @@
                                 trStr += '<td>' + config["label"] + ':<p id="' + dataKey + '">' + realtimeInfo[dataKey] + '</p></td>';
                                 if (config["title"]) {
                                     document.title = realtimeInfo[dataKey] + "[实]";
+                                }
+                                if ("yesterdayClosePrice" == dataKey) {
+                                    yesterdayClosePrice = realtimeInfo[dataKey];
                                 }
                                 if (5 == i) {
                                     trStr += '</tr>';
@@ -171,7 +175,7 @@
                                     '鼠标拖动可以进行缩放' : '手势操作进行缩放'
                                 },
                                 xAxis: {
-                                    categories: xArr
+                                    categories: xArr,
                                 },
                                 tooltip: {
                                     dateTimeLabelFormats: {
@@ -188,7 +192,14 @@
                                 yAxis: {
                                     title: {
                                         text: '价格线'
-                                    }
+                                    },
+                                    plotLines: [{   //一条延伸到整个绘图区的线，标志着轴中一个特定值。
+                                        color: '#000',
+                                        dashStyle: 'Dash', //Dash,Dot,Solid,默认Solid
+                                        width: 1,
+                                        value: yesterdayClosePrice,  //y轴显示位置
+                                        zIndex: 0
+                                    }]
                                 },
                                 legend: {
                                     enabled: false
