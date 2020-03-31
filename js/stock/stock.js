@@ -7,3 +7,4 @@ var stockOfflineLineUrl = stockApiHost + "/offline/line";
 var stockUpDownListUrl = stockApiHost + "/upDown/list";
 var stockLimitUpDownListUrl = stockApiHost + "/limitUpDown/list";
 var stockLimitUpDownCountUrl = stockApiHost + "/limitUpDown/count";
+var stockRealtimeRankUrl = stockApiHost + "/realtime/rank";
