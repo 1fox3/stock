@@ -1,0 +1,221 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>首页</title>
+    </head>
+    <body>
+        <div id="header"></div> 
+        <div class="container">
+            <div class="row clearfix">
+                <div class="col-md-12 column">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    序号
+                                </th>
+                                <th>
+                                    名称
+                                </th>
+                                <th>
+                                    当前价
+                                </th>
+                                <th>
+                                    增幅
+                                </th>
+                                <th>
+                                    今日开盘价
+                                </th>
+                                <th>
+                                    昨日收盘价
+                                </th>
+                                <th>
+                                    最高价
+                                </th>
+                                <th>
+                                    最低价
+                                </th>
+                                <th>
+                                    成交量
+                                </th>
+                                <th>
+                                    成交金额
+                                </th>
+                                <th>
+                                    操作
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id = "realtimeTopIndexTable">
+                        </tbody>
+                    </table>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    涨
+                                </th>
+                                <th>
+                                    平
+                                </th>
+                                <th>
+                                    跌
+                                </th>
+                                <th>
+                                    涨0%-3%
+                                </th>
+                                <th>
+                                    涨3%-5%
+                                </th>
+                                <th>
+                                    涨5%-7%
+                                </th>
+                                <th>
+                                    涨7%以上
+                                </th>
+                                <th>
+                                    跌0%-3%
+                                </th>
+                                <th>
+                                    跌3%-5%
+                                </th>
+                                <th>
+                                    跌5%-7%
+                                </th>
+                                <th>
+                                    跌7%以上
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id = "realtimeUptickRateStatistics">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div id="footer"></div>
+        <script src="http://cdn.staticfile.org/jquery/2.0.0/jquery.min.js"></script>
+        <script type="text/javascript" src="/stock/stock.js"></script>
+        <script type="text/javascript" src="/common/tools.js"></script>
+        <script type="text/javascript"> 
+            $('#header').load('/header.html');
+            $('#footer').load('/footer.html'); 
+        </script>
+        <script type="text/javascript">
+            function handlePercentValue(value) {
+                return parseInt(value * 10000)/100 + "%";
+            }
+
+            function handleNum(value) {
+                return parseInt(value * 10000)/10000;
+            }
+            function handleNumStr(value) {
+                var y = 100000000;
+                var w = 10000;
+                if (value > y) {
+                    return handleNum(value/y) + "亿";
+                }
+                if (value > w) {
+                    return handleNum(value/w) + "万";
+                }
+                return value;
+            }
+            function getColor(value) {
+                if (value == 0) {
+                    return "black";
+                }
+                if (value < 0) {
+                    return "green";
+                }
+                return "red";
+            }
+            function handleRealtimeTopIndex() {
+                $.ajax({
+                    type: "GET",
+                    url: stockRealtimeTopIndexUrl,
+                    dataType: "json",
+                    data: {},
+                    success: function(data) {
+                        realtimeTopIndexInfoList =  data.data;
+                        var trStr = "";
+                        for(i = 0,len = realtimeTopIndexInfoList.length; i < len; i++) {
+                            
+                            realtimeTopIndexInfo = realtimeTopIndexInfoList[i];
+                            uptickRate = 0;
+                            if (realtimeTopIndexInfo.currentPrice && realtimeTopIndexInfo.yesterdayClosePrice) {
+                                var uptickRate = (realtimeTopIndexInfo.currentPrice - realtimeTopIndexInfo.yesterdayClosePrice) / realtimeTopIndexInfo.yesterdayClosePrice;
+                                
+                            }
+                            var color = "black";
+                            if (0 < uptickRate) {
+                                color = "red";
+                            }
+                            if (0 > uptickRate) {
+                                color = "green";
+                            }
+                            uptickRate = handlePercentValue(uptickRate)                            
+                            var color = "red";
+                            trStr += "<tr>";
+                            trStr += "<td>" + (i + 1) + "</td>";
+                            trStr += "<td>" + realtimeTopIndexInfo.stockName + "</td>";
+                            trStr += "<td style=\"color:" + color + "\">" + realtimeTopIndexInfo.currentPrice + "</td>";
+                            trStr += "<td style=\"color:" + color + "\">" + uptickRate + "</td>";
+                            trStr += "<td style=\"color:" + color + "\">" + realtimeTopIndexInfo.todayOpenPrice + "</td>";
+                            trStr += "<td style=\"color:" + color + "\">" + realtimeTopIndexInfo.yesterdayClosePrice + "</td>";
+                            trStr += "<td style=\"color:" + color + "\">" + realtimeTopIndexInfo.todayHighestPrice + "</td>";
+                            trStr += "<td style=\"color:" + color + "\">" + realtimeTopIndexInfo.todayLowestPrice + "</td>";
+                            trStr += "<td style=\"color:" + color + "\">" + handleNumStr(realtimeTopIndexInfo.dealNum) + "</td>";
+                            trStr += "<td style=\"color:" + color + "\">" + handleNumStr(realtimeTopIndexInfo.dealMoney) + "</td>";
+                            trStr += "<td>";
+                            trStr += "<a target=\"_blank\" href = \"/stock/realtime.html?stockId=" + realtimeTopIndexInfo.stockId +"\">实时</a> ";
+                            trStr += " <a target=\"_blank\" href = \"/stock/offline.html?stockId=" + realtimeTopIndexInfo.stockId +"\">离线</a>";
+                            trStr += "</td>";
+                            trStr += "</tr>";
+                        }
+                        document.getElementById("realtimeTopIndexTable").innerHTML = "";
+                        $(trStr).appendTo(document.getElementById("realtimeTopIndexTable"));
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        alert("请求异常");
+                    }
+                });
+                
+            }
+            function handleRealtimeUptickRateStatistics() {
+                $.ajax({
+                    type: "GET",
+                    url: stockRealtimeUptickRateStatisticsUrl,
+                    dataType: "json",
+                    data: {},
+                    success: function(data) {
+                        realtimeUptickRateStatistics =  data.data;
+                        var trStr = "";
+                        trStr += "<tr>";
+                            trStr += "<td style=\"color:red\">" + realtimeUptickRateStatistics.up + "</td>";
+                            trStr += "<td style=\"color:black\">" + realtimeUptickRateStatistics.zero + "</td>";
+                            trStr += "<td style=\"color:green\">" + realtimeUptickRateStatistics.down + "</td>";
+                            trStr += "<td style=\"color:red\">" + realtimeUptickRateStatistics["0~3"] + "</td>";
+                            trStr += "<td style=\"color:red\">" + realtimeUptickRateStatistics["3~5"] + "</td>";
+                            trStr += "<td style=\"color:red\">" + realtimeUptickRateStatistics["5~7"] + "</td>";
+                            trStr += "<td style=\"color:red\">" + realtimeUptickRateStatistics["7"] + "</td>";
+                            trStr += "<td style=\"color:green\">" + realtimeUptickRateStatistics["-3~0"] + "</td>";
+                            trStr += "<td style=\"color:green\">" + realtimeUptickRateStatistics["-5~-3"] + "</td>";
+                            trStr += "<td style=\"color:green\">" + realtimeUptickRateStatistics["-7~-5"] + "</td>";
+                            trStr += "<td style=\"color:green\">" + realtimeUptickRateStatistics["-7"] + "</td>";
+                        trStr += "</tr>";
+                        document.getElementById("realtimeUptickRateStatistics").innerHTML = "";
+                        $(trStr).appendTo(document.getElementById("realtimeUptickRateStatistics"));
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        alert("请求异常");
+                    }
+                });
+                
+            }
+            handleRealtimeTopIndex();
+            handleRealtimeUptickRateStatistics();
+            window.setInterval(handleRealtimeTopIndex, 5000);
+            window.setInterval(handleRealtimeUptickRateStatistics, 5000);
+        </script>
+    </body>
+</html>

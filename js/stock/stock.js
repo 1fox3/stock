@@ -8,3 +8,5 @@ var stockUpDownListUrl = stockApiHost + "/upDown/list";
 var stockLimitUpDownListUrl = stockApiHost + "/limitUpDown/list";
 var stockLimitUpDownCountUrl = stockApiHost + "/limitUpDown/count";
 var stockRealtimeRankUrl = stockApiHost + "/realtime/rank";
+var stockRealtimeTopIndexUrl = stockApiHost + "/realtime/topIndex";
+var stockRealtimeUptickRateStatisticsUrl = stockApiHost + "/realtime/uptickRateStatistics";
