@@ -4,6 +4,7 @@ var stockRealtimePriceListUrl = stockApiHost + "/realtime/priceList";
 var stockRealtimeLineUrl = stockApiHost + "/realtime/line";
 var stockFollowListUrl = stockApiHost + "/follow/list";
 var stockOfflineLineUrl = stockApiHost + "/offline/line";
+var stockOfflineDealRatioUrl = stockApiHost + "/offline/dealRatio";
 var stockUpDownListUrl = stockApiHost + "/upDown/list";
 var stockLimitUpDownListUrl = stockApiHost + "/limitUpDown/list";
 var stockLimitUpDownCountUrl = stockApiHost + "/limitUpDown/count";
