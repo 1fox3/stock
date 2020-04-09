@@ -91,12 +91,17 @@
             function handleOfflineLine(){
                 var urlParams = GetUrlParams();
                 var stockId = urlParams.stockId;
+                var date = new Date();
+                var startDate = (date.getFullYear() - 1) + "-01-01";
+                var endDate = date.getFullYear() + "-12-31";
                 $.ajax({
                     type: "POST",
                     url: stockOfflineLineUrl,
                     dataType: "json",
                     data: {
                         "stockId": stockId,
+                        "startDate": startDate,
+                        "endDate": endDate,
                     },
                     success: function(data) {
                         lineInfo =  data.data.lineNode;
@@ -108,7 +113,7 @@
                         for(i = 0,len = lineInfo.length; i < len; i++) {
                             lineNode = lineInfo[i];
                             lineNodeArr = [];
-                            lineNodeArr.push(lineNode.dateTime);
+                            lineNodeArr.push(lineNode.dt);
                             lineNodeArr.push(lineNode.openPrice);
                             lineNodeArr.push(lineNode.closePrice);
                             lineNodeArr.push(lineNode.lowestPrice);
