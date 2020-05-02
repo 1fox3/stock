@@ -1,0 +1,116 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Quartz任务管理</title>
+    </head>
+    <body>
+        <div id="header"></div> 
+        <div class="container">
+            <div class="row clearfix">
+                <div class="col-md-12 column">
+                    <a onclick="quartzJobParamCreate()">创建</a>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    序号
+                                </th>
+                                <th>
+                                    类型
+                                </th>
+                                <th>
+                                    值
+                                </th>
+                                <th>
+                                    描述
+                                </th>
+                                <th>
+                                    更新时间
+                                </th>
+                                <th>
+                                    操作
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id = "quartzJobParamListTable">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div id="footer"></div>
+        <script src="http://cdn.staticfile.org/jquery/2.0.0/jquery.min.js"></script>
+        <script type="text/javascript" src="/common/tools.js"></script>
+        <script type="text/javascript" src="/quartz/quartz.js"></script>
+        <script type="text/javascript"> 
+            $('#header').load('/header.html');
+            $('#footer').load('/footer.html'); 
+        </script>
+        <script type="text/javascript">
+            function handleQuartzJobParamList(jobId) {
+                $.ajax({
+                    type: "GET",
+                    url: quartzJobParamListUrl,
+                    dataType: "json",
+                    data: {
+                        "jobId": jobId,
+                    },
+                    success: function(data) {
+                        quartzJobParamListInfo =  data.data;
+                        var trStr = "";
+                        for(i = 0,len = quartzJobParamListInfo.length; i < len; i++) {
+                            quartzJobParamInfo = quartzJobParamListInfo[i];
+                            trStr += "<tr>";
+                            trStr += "<td>" + quartzJobParamInfo.paramIdx + "</td>";
+                            trStr += "<td>" + quartzJobParamInfo.paramType + "</td>";
+                            trStr += "<td>" + quartzJobParamInfo.paramValue + "</td>";
+                            trStr += "<td>" + quartzJobParamInfo.note + "</td>";
+                            trStr += "<td>" + quartzJobParamInfo.updateTime + "</td>";
+                            trStr += "<td>";
+                            trStr += "<a href = \"/quartz/param.html?jobId=" + jobId + "&jobParamId=" + quartzJobParamInfo.id +"\">编辑</a> ";
+                            trStr += "<a onclick=\"quartzJobParamDelete(" + quartzJobParamInfo.id + ")\">删除</a> ";
+                            trStr += "</td>";
+                            trStr += "</tr>";
+                        }
+                        document.getElementById("quartzJobParamListTable").innerHTML = "";
+                        $(trStr).appendTo(document.getElementById("quartzJobParamListTable"));
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        alert("请求异常");
+                    }
+                });
+            }
+            function quartzJobParamDelete(jobParamId) {
+                $.ajax({
+                    type: "POST",
+                    url: quartzJobParamDeleteUrl,
+                    dataType: "json",
+                    data: {
+                        "jobParamId": jobParamId,
+                    },
+                    success: function(data) {
+                        if (0 == data.code) {
+                            window.location.href = "/quartz/jobParam.html?jobId=" + jobId;
+                        } else {
+                            alert(data.msg);
+                        }
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        alert("请求异常");
+                    }
+                });
+            }
+            function quartzJobParamCreate() {
+                window.location.href = "/quartz/param.html?jobId=" + jobId;
+            }
+            var urlParams = GetUrlParams();
+            var jobId = urlParams.jobId;
+            var re = /^[0-9]+/;
+            if (re.test(jobId)) {
+                handleQuartzJobParamList(jobId)
+            } else {
+                jobId = "";
+            }
+        </script>
+    </body>
+</html>
